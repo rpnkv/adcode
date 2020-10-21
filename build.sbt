@@ -14,6 +14,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
 )
 
+/*libraryDependencies += "com.twitter" %% "algebird-core" % "0.13.7"*/
+libraryDependencies += "net.agkn" % "hll" % "1.6.0"
+libraryDependencies += "com.google.guava" % "guava" % "29.0-jre"
+
 libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.0",
   "org.scalatest" %% "scalatest" % "3.2.0",
