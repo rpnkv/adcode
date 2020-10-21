@@ -5,6 +5,12 @@ import net.agkn.hll.HLL
 
 import scala.collection.mutable
 
+/**
+ * Uses HashMap for 1st layer access and HyperLogLog storage for low-lever access (keeping number fo distinct records).
+ * @param hashFunction
+ * @param hllFactory
+ * @param map
+ */
 class HashAndHllStorage(hashFunction: Long => Long, hllFactory: () => HLL, map: mutable.Map[String, HLL]) extends Storage {
 
   override def put(name: String, value: Long): Unit = {

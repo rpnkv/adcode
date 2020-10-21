@@ -10,8 +10,13 @@ import org.rpnkv.practice.iv.quadcode.core.{HashAndHllStorage, Storage}
 import spray.json.DefaultJsonProtocol._
 
 import scala.concurrent.ExecutionContextExecutor
-import scala.io.StdIn
 
+/**
+ * API contains 2 endpoints:
+ * /data - consuming JSON with name & value like {"name":1215}
+ * /report - returns array, containing number of distinct records, associating with each key
+ * @param storage
+ */
 class Server(storage: Storage) {
 
   val route: Route =
@@ -41,6 +46,6 @@ object Server {
     Http()
       .newServerAt("localhost", 8080)
       .bind(server.route)
-
+      .onComplete(_ => println(s"Server is running on localhost:8080"))
   }
 }

@@ -2,6 +2,9 @@ package org.rpnkv.practice.iv.quadcode.core
 
 import scala.collection.mutable
 
+/**
+ *  Uses HashMap for 1st layer access and and HashSet for 2nd layer logic (keeping number of distinct records).
+ */
 class HashAndSetStorage extends Storage {
 
   var map: mutable.Map[String, mutable.Set[Long]] = {

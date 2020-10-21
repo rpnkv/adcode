@@ -6,6 +6,8 @@ import scala.collection.mutable
 
 class HashHllStorageTest extends GenericStorageTest {
 
+  override def genericSize: Int = 100000
+
   override val storage: Storage = new HashAndHllStorage(
     HashAndHllStorage.hashLong,
     () => new HLL(14, 5),
@@ -15,5 +17,4 @@ class HashHllStorageTest extends GenericStorageTest {
       builder.result()
     }
   )
-  override def genericSize: Int = 10000
 }
