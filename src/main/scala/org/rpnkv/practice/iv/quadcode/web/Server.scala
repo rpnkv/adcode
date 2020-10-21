@@ -13,6 +13,7 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
 class Server(storage: Storage){
+
   val route: Route =
     path("data") {
       get {

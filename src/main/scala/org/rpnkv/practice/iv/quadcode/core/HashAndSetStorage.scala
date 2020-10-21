@@ -2,12 +2,12 @@ package org.rpnkv.practice.iv.quadcode.core
 
 import scala.collection.mutable
 
-class HashStorage extends Storage {
+class HashAndSetStorage extends Storage {
 
-  private val map: mutable.Map[String, mutable.Set[Long]] = {
-    val mmBuilder = mutable.Map.newBuilder[String, mutable.Set[Long]]
-    mmBuilder.sizeHint(1)
-    mmBuilder.result()
+  var map: mutable.Map[String, mutable.Set[Long]] = {
+    val builder = mutable.Map.newBuilder[String, mutable.Set[Long]]
+    builder.sizeHint(100000)
+    builder.result()
   }
 
   override def put(name: String, value: Long): Unit = {
