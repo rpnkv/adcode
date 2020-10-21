@@ -1,5 +1,4 @@
 FROM openjdk:8
-COPY t. /usr/src/myapp
+COPY target/scala-2.12/quadcode.jar /usr/src/myapp/quadcode.jar
 WORKDIR /usr/src/myapp
-RUN javac Main.java
-CMD ["java", "Main"]
+CMD ["java", "-jar", "quadcode.jar"]
