@@ -12,7 +12,7 @@ import spray.json.DefaultJsonProtocol._
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
-class Server(storage: Storage){
+class Server(storage: Storage) {
 
   val route: Route =
     path("data") {
@@ -24,27 +24,23 @@ class Server(storage: Storage){
       }
     } ~
       path("reports") {
-        get{
+        get {
           complete(OK, storage.reports())
         }
       }
 }
 
-object Server{
+object Server {
   def main(args: Array[String]): Unit = {
 
     implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
     implicit val system: ActorSystem = ActorSystem("my-system", defaultExecutionContext = Option(ec))
-    // needed for the future flatMap/onComplete in the end
 
     val server = new Server(HashAndHllStorage.apply())
 
-    val bindingFuture = Http().newServerAt("localhost", 8080).bind(server.route)
+    Http()
+      .newServerAt("localhost", 8080)
+      .bind(server.route)
 
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-    StdIn.readLine() // let it run until user presses return
-    bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
-      .onComplete(_ => system.terminate()) // and shutdown when done
   }
 }
