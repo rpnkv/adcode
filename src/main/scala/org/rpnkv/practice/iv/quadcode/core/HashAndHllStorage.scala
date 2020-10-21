@@ -8,7 +8,7 @@ import scala.collection.mutable
 class HashAndHllStorage(hashFunction: Long => Long, hllFactory: () => HLL, map: mutable.Map[String, HLL]) extends Storage {
 
   override def put(name: String, value: Long): Unit = {
-    val hashedValue = value.hashCode()
+    val hashedValue = hashFunction(value)
 
     map.get(name) match {
       case Some(hll) => hll.addRaw(hashedValue)
@@ -28,18 +28,17 @@ object HashAndHllStorage {
   private val hashFunction = Hashing.murmur3_128
 
   def apply(): HashAndHllStorage = {
-    //new HashAndHllStorage(hashLong)
-    ???
+    new HashAndHllStorage(
+      HashAndHllStorage.hashLong,
+      () => new HLL(14, 5),
+      {
+        val builder = mutable.Map.newBuilder[String, HLL]
+        builder.sizeHint(100000)
+        builder.result()
+      }
+    )
   }
-
- /* val a = Random.nextLong()
-  val b = Random.nextLong()
-  val c = Random.nextLong()*/
-
   def hashLong(long: Long): Long = {
     hashFunction.newHasher.putLong(long).hash().asLong()
-   /* val low = long
-    val high = (long >>> 32)
-    ((a * low + b * high + c) >>> 32)*/
   }
 }

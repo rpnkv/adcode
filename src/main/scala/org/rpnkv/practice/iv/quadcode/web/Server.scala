@@ -6,7 +6,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.StatusCodes.OK
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import org.rpnkv.practice.iv.quadcode.core.Storage
+import org.rpnkv.practice.iv.quadcode.core.{HashAndHllStorage, Storage}
 import spray.json.DefaultJsonProtocol._
 
 import scala.concurrent.ExecutionContextExecutor
@@ -37,7 +37,7 @@ object Server{
     implicit val system: ActorSystem = ActorSystem("my-system", defaultExecutionContext = Option(ec))
     // needed for the future flatMap/onComplete in the end
 
-    val server = new Server(null)
+    val server = new Server(HashAndHllStorage.apply())
 
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(server.route)
 
