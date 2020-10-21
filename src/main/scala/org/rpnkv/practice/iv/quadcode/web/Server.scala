@@ -2,29 +2,34 @@ package org.rpnkv.practice.iv.quadcode.web
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshalling.GenericMarshallers
-import akka.http.scaladsl.model._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import akka.http.scaladsl.model.StatusCodes.OK
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
 import org.rpnkv.practice.iv.quadcode.core.Storage
+import spray.json.DefaultJsonProtocol._
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
 
 class Server(storage: Storage){
-  val route =
+  val route: Route =
     path("data") {
       get {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
+        entity(as[(String, Long)]) { tuple =>
+          storage.put(tuple._1, tuple._2)
+          complete(OK)
+        }
       }
     } ~
       path("reports") {
         get{
-          complete(StatusCodes.OK/*, Map("value1" -> 1482)*/)
+          complete(OK, storage.reports())
         }
       }
 }
 
-object Server /*extends GenericMarshallers*/{
+object Server{
   def main(args: Array[String]): Unit = {
 
     implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
