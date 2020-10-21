@@ -7,6 +7,7 @@ scalaVersion := "2.12.8"
 val AkkaVersion = "2.6.8"
 val AkkaHttpVersion = "10.2.1"
 libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-testkit" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   "com.typesafe.akka" %% "akka-http-testkit" % AkkaHttpVersion
@@ -14,9 +15,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.0",
-  "org.scalatest" %% "scalatest" % "3.2.0" % "test",
-  "org.scalatest" %% "scalatest" % "3.2.0" % "test",
-  "org.scalamock" %% "scalamock" % "4.4.0",
+  "org.scalatest" %% "scalatest" % "3.2.0",
   "org.mockito" %% "mockito-scala" % "1.11.1"
 )
 

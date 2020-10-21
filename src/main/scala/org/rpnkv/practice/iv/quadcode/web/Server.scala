@@ -5,9 +5,24 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshalling.GenericMarshallers
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
+import org.rpnkv.practice.iv.quadcode.core.Storage
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
+
+class Server(storage: Storage){
+  val route =
+    path("data") {
+      get {
+        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
+      }
+    } ~
+      path("reports") {
+        get{
+          complete(StatusCodes.OK/*, Map("value1" -> 1482)*/)
+        }
+      }
+}
 
 object Server /*extends GenericMarshallers*/{
   def main(args: Array[String]): Unit = {
@@ -16,19 +31,9 @@ object Server /*extends GenericMarshallers*/{
     implicit val system: ActorSystem = ActorSystem("my-system", defaultExecutionContext = Option(ec))
     // needed for the future flatMap/onComplete in the end
 
-    val route =
-      path("data") {
-        get {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
-        }
-      } ~
-        path("reports") {
-          get{
-            complete(StatusCodes.OK/*, Map("value1" -> 1482)*/)
-          }
-        }
+    val server = new Server(null)
 
-    val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
+    val bindingFuture = Http().newServerAt("localhost", 8080).bind(server.route)
 
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
