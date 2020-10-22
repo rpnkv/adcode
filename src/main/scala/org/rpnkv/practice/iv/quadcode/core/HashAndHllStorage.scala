@@ -25,7 +25,7 @@ class HashAndHllStorage(hashFunction: Long => Long, hllFactory: () => HLL, map: 
     }
   }
 
-  override def reports(): Seq[(String, Int)] = map.map(tuple => tuple._1 -> tuple._2.cardinality.intValue).toSeq
+  override def reports(): Map[String, Int] = map.map(tuple => tuple._1 -> tuple._2.cardinality.intValue).toMap
 
 }
 

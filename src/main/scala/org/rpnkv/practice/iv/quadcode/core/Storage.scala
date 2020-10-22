@@ -7,6 +7,6 @@ trait Storage {
 
   def put(name: String, value: Long): Unit
 
-  def reports(): Seq[(String, Int)]
+  def reports(): Map[String, Int]
 
 }

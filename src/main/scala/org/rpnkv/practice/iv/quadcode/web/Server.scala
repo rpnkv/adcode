@@ -13,8 +13,8 @@ import scala.concurrent.ExecutionContextExecutor
 
 /**
  * API contains 2 endpoints:
- * /data - consuming JSON with name & value like {"name":1215}
- * /report - returns array, containing number of distinct records, associating with each key
+ *  POST /data - consuming JSON with name & value like {"name":1215}
+ *  GET /report - returns array, containing number of distinct records, associating with each key
  * @param storage
  */
 class Server(storage: Storage) {
@@ -23,7 +23,7 @@ class Server(storage: Storage) {
 
   val route: Route =
     path("data") {
-      get {
+      post {
         entity(as[Map[String, String]]) { map =>
           map.get(EVENT_NAME) match {
             case Some(eventName) =>
@@ -31,7 +31,7 @@ class Server(storage: Storage) {
                 case Some(value) =>
                   storage.put(eventName, value.toLong)
                   complete(OK)
-                case None => complete(BadRequest, s"field $VALUE not fould in json")
+                case None => complete(BadRequest, s"field $VALUE not found in json")
               }
             case None => complete(BadRequest, s"field $EVENT_NAME not found in json")
           }

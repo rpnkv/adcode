@@ -20,8 +20,8 @@ class HashAndSetStorage extends Storage {
     }
   }
 
-  override def reports(): Seq[(String, Int)] = {
-    map.map(entry => entry._1 -> entry._2.size).toSeq
+  override def reports(): Map[String, Int] = {
+    map.map(entry => entry._1 -> entry._2.size).toMap
   }
 
 }
