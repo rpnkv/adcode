@@ -10,12 +10,15 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import spray.json.DefaultJsonProtocol._
 import spray.json.{JsArray, JsNumber, JsObject, JsString}
 
+
 import scala.util.Random
 
 class ServerTest extends AnyWordSpec with MockitoSugar with ScalatestRouteTest with Matchers {
 
   private val storage = mock[Storage]
   private val server = new Server(storage)
+
+  import org.rpnkv.practice.iv.quadcode.web.Server._
 
   "Server" should {
     "accept new entry and pass it to storage" in {
@@ -24,7 +27,7 @@ class ServerTest extends AnyWordSpec with MockitoSugar with ScalatestRouteTest w
 
       Get(
         "/data",
-        JsArray(JsString(name), JsNumber(value))
+        JsObject(Map(EVENT_NAME -> JsString(name), VALUE -> JsString(value.toString)))
       ) ~> server.route ~> check {
         status shouldEqual OK
         verify(storage).put(name, value)

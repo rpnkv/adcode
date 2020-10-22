@@ -3,7 +3,7 @@ package org.rpnkv.practice.iv.quadcode.web
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import akka.http.scaladsl.model.StatusCodes.OK
+import akka.http.scaladsl.model.StatusCodes.{BadRequest, OK}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import org.rpnkv.practice.iv.quadcode.core.{HashAndHllStorage, Storage}
@@ -19,12 +19,22 @@ import scala.concurrent.ExecutionContextExecutor
  */
 class Server(storage: Storage) {
 
+  import Server.{EVENT_NAME, VALUE}
+
   val route: Route =
     path("data") {
       get {
-        entity(as[(String, Long)]) { tuple =>
-          storage.put(tuple._1, tuple._2)
-          complete(OK)
+        entity(as[Map[String, String]]) { map =>
+          map.get(EVENT_NAME) match {
+            case Some(eventName) =>
+              map.get(VALUE) match {
+                case Some(value) =>
+                  storage.put(eventName, value.toLong)
+                  complete(OK)
+                case None => complete(BadRequest, s"field $VALUE not fould in json")
+              }
+            case None => complete(BadRequest, s"field $EVENT_NAME not found in json")
+          }
         }
       }
     } ~
@@ -36,6 +46,11 @@ class Server(storage: Storage) {
 }
 
 object Server {
+
+  final val EVENT_NAME = "event_name"
+  final val VALUE = "value";
+
+
   def main(args: Array[String]): Unit = {
 
     implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
